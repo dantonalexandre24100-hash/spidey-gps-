@@ -141,27 +141,31 @@
             String(now.getMinutes()).padStart(2, '0');
     }, 1000);
 
-    // Initialisation de la carte
+    // Initialisation de la carte (OpenStreetMap sans clé requise)
     let map = L.map('map', { zoomControl: false }).setView([48.8566, 2.3522], 15);
 
-    let darkLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        maxZoom: 19
+    let standardLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    let streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19
+    let satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        maxZoom: 19,
+        attribution: 'Tiles &copy; Esri'
     });
 
-    let isTerrain = false;
+    let isSatellite = false;
     function toggleTerrain() {
-        if (isTerrain) {
-            map.removeLayer(streetLayer);
-            darkLayer.addTo(map);
-            isTerrain = false;
+        if (isSatellite) {
+            map.removeLayer(satelliteLayer);
+            standardLayer.addTo(map);
+            isSatellite = false;
+            alert("Mode Standard activé.");
         } else {
-            map.removeLayer(darkLayer);
-            streetLayer.addTo(map);
-            isTerrain = true;
+            map.removeLayer(standardLayer);
+            satelliteLayer.addTo(map);
+            isSatellite = true;
+            alert("Mode Satellite / Terrain activé.");
         }
     }
 
